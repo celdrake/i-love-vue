@@ -1,19 +1,21 @@
 <template>
   <div class="game-box">
     <div class="game-box__row" v-for="(row, rowIndex) in matrix" :key="rowIndex">
-      <div class="game-box__tile"
-           :class="{'is-revealed': cell.display,
-                    'has-pattern': cell.content === 'pattern'}"
-           v-for="(cell, cellIndex) in row" :key="cellIndex">
-      </div>
+      <game-tile v-for="(cell, cellIndex) in row" :key="cellIndex" :tile="cell" />
     </div>
   </div>
 </template>
 
 <script>
   import { mapState } from 'vuex';
+
+  import GameTile from './GameTile.vue';
+
   export default {
     name: 'GameBox.vue',
+    components: {
+     GameTile,
+    },
     computed: {
       ...mapState({
         matrix: (state) => state.matrix,
@@ -34,20 +36,6 @@
       flex-wrap: nowrap;
       overflow: hidden;
       transition: all .2s ease-out;
-    }
-    &__tile {
-      padding: 1.5em;
-      background: #3a2a25;
-      color: white;
-      margin: 0;
-      border: 2px solid gray;
-      border-collapse: collapse;
-
-      &.has-pattern {
-        &.is-revealed {
-          background-color: blue;
-        }
-      }
     }
   }
 </style>
