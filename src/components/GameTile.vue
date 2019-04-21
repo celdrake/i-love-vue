@@ -1,5 +1,9 @@
 <template>
-  <div class="game-tile" :class="tileClasses" @click="tileClick" />
+  <div class="game-tile" :class="tileClasses" @click="tileClick">
+    <span class="game-tile__symbol" :class="{'show-result': tile.showResult }">
+      {{ endResult }}
+    </span>
+  </div>
 </template>
 
 <script>
@@ -15,9 +19,23 @@
       tileClasses() {
         return {
           ['is-revealed']: this.tile.display,
-          [`has-${this.tile.content}`]: true,
+          [`has-${this.tile.content}`]: this.tile.display,
         };
-      }
+      },
+      endResult() {
+        switch(this.tile.content) {
+          case 'click-success':
+            return '🤩';
+          case 'pattern':
+            return '🙅';
+          case 'click-error':
+            return '🤦';
+          case 'empty':
+          default:
+            // Return a symbol even for empty cells, to keep the same space
+            return '👍';
+        }
+      },
     },
     methods: {
       tileClick() {
@@ -29,7 +47,7 @@
 
 <style lang="scss">
   .game-tile {
-    padding: 1.5em;
+    padding: 4em;
     background: #3a2a25;
     color: white;
     margin: 0;
@@ -45,6 +63,14 @@
       }
       &.has-click-error {
         background-color: crimson;
+      }
+    }
+
+    &__symbol {
+      font-size: 1.5em;
+      visibility: hidden;
+      &.show-result {
+        visibility: visible;
       }
     }
   }

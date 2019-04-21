@@ -34,6 +34,7 @@ const initMatrix = (gameSize) => {
         display: true,
         // values: empty / pattern / click-error / click-success
         content: 'empty',
+        showResult: false,
       });
     }
     matrix.push(rowColumns);
@@ -96,6 +97,21 @@ export default new Vuex.Store({
         revealed: totalRevealed,
         success: state.successTiles + (isSuccess ? 1 : 0)
       });
+      const isEndGame = totalRevealed === state.gameSize;
+      if (isEndGame) {
+        context.dispatch('onEndGame');
+      }
+    },
+    onEndGame(context) {
+      context.state.matrix.forEach((row, rowIndex) => {
+        row.forEach((cell, cellIndex) => {
+          const cellCount = (rowIndex * GAME_SIZE) + cellIndex;
+          setTimeout(() => {
+            cell.display = true;
+            cell.showResult = true;
+          }, 200 * cellCount);
+        });
+      });
     },
   },
   mutations: {
@@ -105,6 +121,12 @@ export default new Vuex.Store({
     setRevealedTiles(state, result) {
       state.revealedTiles = result.revealed;
       state.successTiles = result.success;
+    },
+    updateTile(state, { row, column, updatedTile }) {
+      const updatedMatrix = Object.assign({}, state.matrix);
+      updatedMatrix[row][column] = updatedTile;
+
+      state.matrix = updatedMatrix;
     },
   },
 })
