@@ -32,7 +32,7 @@ const initMatrix = (gameSize) => {
     for (let col = 0; col < gameSize; col += 1) {
       rowColumns.push({
         display: true,
-        // values: empty / pattern / clickError / clickSuccess
+        // values: empty / pattern / click-error / click-success
         content: 'empty',
       });
     }
@@ -44,6 +44,8 @@ const initMatrix = (gameSize) => {
 
 const gameState = {
   gameSize: GAME_SIZE,
+  revealedTiles: 0,
+  successTiles: 0,
   matrix: initMatrix(GAME_SIZE),
 };
 
@@ -53,6 +55,10 @@ export default new Vuex.Store({
     newGame(context) {
       const newMatrix = initMatrix(GAME_SIZE);
       context.commit('updateMatrix', newMatrix);
+      context.commit('setRevealedTiles', {
+        revealed: 0,
+        success: 0,
+      });
 
       setTimeout(() => {
         context.dispatch('togglePatternVisibility');
@@ -76,10 +82,29 @@ export default new Vuex.Store({
       // });
       context.commit('updateMatrix', updatedMatrix);
     },
+    revealTile(context, tile) {
+      const state = context.state;
+      if (state.revealedTiles === state.gameSize) {
+        return;
+      }
+      const isSuccess = tile.content === 'pattern';
+      const totalRevealed = state.revealedTiles + 1;
+      // We mutate the state directly, so not using an action here
+      tile.content = isSuccess ? 'click-success' : 'click-error';
+      tile.display = true;
+      context.commit('setRevealedTiles', {
+        revealed: totalRevealed,
+        success: state.successTiles + (isSuccess ? 1 : 0)
+      });
+    },
   },
   mutations: {
     updateMatrix(state, newMatrix) {
       state.matrix = newMatrix;
+    },
+    setRevealedTiles(state, result) {
+      state.revealedTiles = result.revealed;
+      state.successTiles = result.success;
     },
   },
 })
