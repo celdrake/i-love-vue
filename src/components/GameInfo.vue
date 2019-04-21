@@ -1,12 +1,19 @@
 <template>
   <div class="game-info">
-    Game info here
+    <button @click="restartGame">
+      New game
+    </button>
   </div>
 </template>
 
 <script>
   export default {
     name: 'GameInfo.vue',
+    methods: {
+      restartGame() {
+        this.$eventHub.$emit('newGame');
+      },
+    },
   }
 </script>
 

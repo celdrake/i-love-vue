@@ -17,6 +17,10 @@
       };
     },
     methods: {
+      resetMatrix() {
+        const newMatrix = this.initMatrix(4);
+        this.matrix = newMatrix;
+      },
       initMatrix(gameSize) {
         const matrix = [];
         for (let row = 0; row < gameSize; row += 1) {
@@ -31,6 +35,12 @@
         }
         return matrix;
       },
+    },
+    created() {
+      this.$eventHub.$on('newGame', this.resetMatrix);
+    },
+    destroyed() {
+      this.$eventHub.$off('newGame', this.resetMatrix);
     },
   };
 </script>
