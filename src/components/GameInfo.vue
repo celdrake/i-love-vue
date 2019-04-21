@@ -11,7 +11,7 @@
     name: 'GameInfo.vue',
     methods: {
       restartGame() {
-        this.$eventHub.$emit('newGame');
+        this.$store.dispatch('newGame');
       },
     },
   }

@@ -9,38 +9,16 @@
 </template>
 
 <script>
+  import { mapState } from 'vuex';
   export default {
     name: 'GameBox.vue',
-    data() {
-      return {
-        matrix: this.initMatrix(4),
-      };
+    computed: {
+      ...mapState({
+        matrix: (state) => state.matrix,
+      }),
     },
     methods: {
-      resetMatrix() {
-        const newMatrix = this.initMatrix(4);
-        this.matrix = newMatrix;
-      },
-      initMatrix(gameSize) {
-        const matrix = [];
-        for (let row = 0; row < gameSize; row += 1) {
-          const rowColumns = [];
-          for (let col = 0; col < gameSize; col += 1) {
-            rowColumns.push({
-              display: true,
-              content: Date.now() % 1000,
-            });
-          }
-          matrix.push(rowColumns);
-        }
-        return matrix;
-      },
-    },
-    created() {
-      this.$eventHub.$on('newGame', this.resetMatrix);
-    },
-    destroyed() {
-      this.$eventHub.$off('newGame', this.resetMatrix);
+
     },
   };
 </script>
