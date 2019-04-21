@@ -1,8 +1,10 @@
 <template>
   <div class="game-box">
     <div class="game-box__row" v-for="(row, rowIndex) in matrix" :key="rowIndex">
-      <div class="game-box__tile" v-for="(cell, cellIndex) in row" :key="cellIndex">
-        {{ cell.content }}
+      <div class="game-box__tile"
+           :class="{'is-revealed': cell.display,
+                    'has-pattern': cell.content === 'pattern'}"
+           v-for="(cell, cellIndex) in row" :key="cellIndex">
       </div>
     </div>
   </div>
@@ -16,9 +18,6 @@
       ...mapState({
         matrix: (state) => state.matrix,
       }),
-    },
-    methods: {
-
     },
   };
 </script>
@@ -43,6 +42,12 @@
       margin: 0;
       border: 2px solid gray;
       border-collapse: collapse;
+
+      &.has-pattern {
+        &.is-revealed {
+          background-color: blue;
+        }
+      }
     }
   }
 </style>

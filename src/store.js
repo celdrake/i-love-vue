@@ -53,6 +53,28 @@ export default new Vuex.Store({
     newGame(context) {
       const newMatrix = initMatrix(GAME_SIZE);
       context.commit('updateMatrix', newMatrix);
+
+      setTimeout(() => {
+        context.dispatch('togglePatternVisibility');
+      }, 2500);
+    },
+    togglePatternVisibility(context, doShow) {
+      // Opción 1: usando Array.map
+      const updatedCell = (cell) => Object.assign({}, cell, { display: doShow });
+      const updatedMatrix = context.state.matrix.map((row) => {
+        return row.map(updatedCell);
+      });
+
+      // Opción 2: generando un nuevo array manualmente
+      // const updatedMatrix = [];
+      // state.matrix.forEach((matrixRow) => {
+      //   const updatedRow = [];
+      //   matrixRow.forEach((rowCell) => {
+      //     updatedRow.push(updatedCell((rowCell)));
+      //   });
+      //   updatedMatrix.push(updatedRow);
+      // });
+      context.commit('updateMatrix', updatedMatrix);
     },
   },
   mutations: {
